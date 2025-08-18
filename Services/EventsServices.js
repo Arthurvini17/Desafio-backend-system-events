@@ -12,8 +12,17 @@ async function getEvent(eventId) {
     });
 }
 
+async function CreateEvent(datas) {
+    return prisma.events.create({
+        data: {
+            ...datas
+        }
+    });
+}
+
 
 module.exports = {
     getEvent,
-    listAllEvents
+    listAllEvents,
+    CreateEvent,
 };

@@ -34,5 +34,28 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: 'Erro no servidor', error })
         }
+    },
+
+    CreateEvent: async (req, res) => {
+        const {
+            Nome,
+            descricao,
+            data,
+            local
+        } = req.body;
+
+        //convertendo os dados
+        const datas = {
+            Nome,
+            descricao,
+            data: new Date(data),
+            local
+        }
+        try {
+            const createEvents = await EventsServices.CreateEvent(datas);
+            return res.status(201).json({ message: 'evento criado', createEvents });
+        } catch (error) {
+            return res.status(500).json({ message: 'erro no server', error })
+        }
     }
 };
