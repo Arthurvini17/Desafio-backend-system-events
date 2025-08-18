@@ -1,6 +1,10 @@
+const { PrismaClient } = require('../generated/prisma');
+const prisma = new PrismaClient();
 
-
-
-module.exports = {
-    getEvent,
+async function getEvent(eventId) {
+    return prisma.events.findUnique({
+        where: { id: Number(eventId) }
+    });
 }
+
+module.exports = { getEvent };
