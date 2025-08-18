@@ -36,8 +36,11 @@ module.exports = {
         }
     },
 
-    CreateEvent: async (req, res) => {
-        const {
+    createEvent: async (req, res) => {
+        const { Nome, descricao, data, local } = req.body;
+
+
+        const datas = {
             Nome,
             descricao,
             data,
@@ -45,17 +48,41 @@ module.exports = {
         } = req.body;
 
         //convertendo os dados
+
+        try {
+            const createEvents = await EventsServices.createEvent(datas);
+            return res.status(201).json({ message: 'evento criado', createEvents });
+        } catch (error) {
+            return res.status(500).json({ message: 'erro no server', error })
+        }
+    },
+
+
+    editEvent: async (req, res) => {
+        const { Nome, descricao, data, local } = req.body;
+        const { id } = req.params;
+
         const datas = {
             Nome,
             descricao,
             data: new Date(data),
             local
+        };
+
+
+
+        if (!id || isNaN(id)) {
+            return res.status(400).json({ message: 'ID inválido' });
         }
+
         try {
-            const createEvents = await EventsServices.CreateEvent(datas);
-            return res.status(201).json({ message: 'evento criado', createEvents });
+            const updateEvent = await EventsServices.editEvent(id, datas);
+            return res.status(200).json({ message: 'Evento atualizado', updateEvent });
         } catch (error) {
-            return res.status(500).json({ message: 'erro no server', error })
+            console.log(error)
+            return res.status(500).json({ message: 'Erro no server', error })
         }
+
     }
-};
+}
+
