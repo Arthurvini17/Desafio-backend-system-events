@@ -20,5 +20,19 @@ module.exports = {
         } catch (error) {
             return res.status(500).json({ message: 'Erro no servidor', error });
         }
+    },
+
+    listAllEvents: async (req, res) => {
+        try {
+            const events = await EventsServices.listAllEvents();
+
+            if (events.length === 0) {
+                return res.status(400).json({ message: 'Não existem eventos' });
+            }
+
+            return res.status(200).json({ data: events })
+        } catch (error) {
+            return res.status(500).json({ message: 'Erro no servidor', error })
+        }
     }
 };
