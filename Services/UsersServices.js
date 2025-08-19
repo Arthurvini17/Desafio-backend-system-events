@@ -1,4 +1,3 @@
-const { getUserById } = require('../Controllers/UsersController');
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 
@@ -13,7 +12,29 @@ async function getUserById(userId) {
     })
 }
 
+async function createUser(data) {
+    return prisma.users.create({
+        data: {
+            ...data
+        }
+    })
+}
+
+
+async function editUser(userId, data) {
+    return prisma.users.update({
+        data: {
+            ...data
+        },
+        where: {
+            id: Number(userId)
+        }
+    })
+}
+
 module.exports = {
     getAllUsers,
-    getUserById
+    getUserById,
+    createUser,
+    editUser
 }

@@ -34,6 +34,41 @@ module.exports = {
             console.log(error);
             return res.status(500).json({ message: 'erro no server' })
         }
-    }
+    },
 
+    createUser: async (req, res) => {
+
+        const { nome, email, telefone } = req.body;
+
+        try {
+            const creatingUser = await usersServices.createUser({
+                nome, email, telefone
+            })
+            return res.status(201).json({ message: 'user criado', creatingUser })
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'erro no server' });
+        }
+    },
+
+
+    editUser: async (req, res) => {
+        const { id } = req.params;
+
+        const { nome, email, telefone } = req.body;
+
+        if (!id || isNaN(id)) {
+            return res.status(200).json({ message: 'ID invalido' });
+        }
+
+        try {
+            const editingUser = await usersServices.editUser(id,
+                { nome, email, telefone })
+            return res.status(200).json({ message: 'user editado', editingUser });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: 'error no server' });
+        }
+    }
 }
+
