@@ -12,7 +12,7 @@ module.exports = {
         try {
             const event = await EventsServices.getEvent(id);
 
-            if (event === 0) {
+            if (event.length === 0) {
                 return res.status(404).json({ message: 'Evento não encontrado ou não existe' });
             }
 
@@ -37,33 +37,34 @@ module.exports = {
     },
 
     createEvent: async (req, res) => {
-        const { Nome, descricao, data, local } = req.body;
+        const { nome, descricao, data, local } = req.body;
 
+        //convertendo os dados
 
         const datas = {
-            Nome,
+            nome,
             descricao,
             data: new Date(data),
             local
         };
 
-        //convertendo os dados
 
         try {
             const createEvents = await EventsServices.createEvent(datas);
             return res.status(201).json({ message: 'evento criado', createEvents });
         } catch (error) {
+            console.log(error)
             return res.status(500).json({ message: 'erro no server', error })
         }
     },
 
 
     editEvent: async (req, res) => {
-        const { Nome, descricao, data, local } = req.body;
+        const { nome, descricao, data, local } = req.body;
         const { id } = req.params;
 
         const datas = {
-            Nome,
+            nome,
             descricao,
             data: new Date(data),
             local
