@@ -27,6 +27,12 @@ async function editEvent(eventId, datas) {
     });
 }
 
+async function deleteEvents(eventId) {
+    return prisma.events.delete({
+        where: { id: Number(eventId) }
+    });
+}
+
 
 
 module.exports = {
@@ -34,5 +40,6 @@ module.exports = {
     listAllEvents,
     createEvent,
     editEvent,
+    deleteEvents,
 
 };
