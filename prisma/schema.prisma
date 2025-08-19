@@ -16,10 +16,17 @@ datasource db {
 
 model Events {
   id        Int      @id @default(autoincrement())
-  Nome      String
+  nome      String
   descricao String
   data      DateTime
   local     String
+}
+
+model Users {
+  id       Int    @id @default(autoincrement())
+  nome     String
+  email    String @unique
+  telefone String
 }
 
 //TODO ADICIONAR LIMITES DE VAGAS NO MODEL EVENTS
