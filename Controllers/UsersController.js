@@ -1,4 +1,5 @@
 const usersServices = require('../Services/UsersServices');
+const bcrypt = require('bcryptjs');
 
 
 module.exports = {
@@ -38,11 +39,12 @@ module.exports = {
 
     createUser: async (req, res) => {
 
-        const { nome, email, telefone } = req.body;
+        const { nome, email, password, telefone } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         try {
             const creatingUser = await usersServices.createUser({
-                nome, email, telefone
+                nome, email, telefone, password: hashedPassword
             })
             return res.status(201).json({ message: 'user criado', creatingUser })
         } catch (error) {
@@ -55,7 +57,8 @@ module.exports = {
     editUser: async (req, res) => {
         const { id } = req.params;
 
-        const { nome, email, telefone } = req.body;
+        const { nome, email, telefone, password } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         if (!id || isNaN(id)) {
             return res.status(200).json({ message: 'ID invalido' });
@@ -63,7 +66,7 @@ module.exports = {
 
         try {
             const editingUser = await usersServices.editUser(id,
-                { nome, email, telefone })
+                { nome, email, telefone, password: hashedPassword })
             return res.status(200).json({ message: 'user editado', editingUser });
         } catch (error) {
             console.log(error);

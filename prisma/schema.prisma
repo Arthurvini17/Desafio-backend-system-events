@@ -20,13 +20,16 @@ model Events {
   descricao String
   data      DateTime
   local     String
+  users     Users[]  @relation("UserEvents")
 }
 
 model Users {
-  id       Int    @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   nome     String
-  email    String @unique
+  email    String   @unique
+  password String
   telefone String
+  events   Events[] @relation("UserEvents")
 }
 
 //TODO ADICIONAR LIMITES DE VAGAS NO MODEL EVENTS
