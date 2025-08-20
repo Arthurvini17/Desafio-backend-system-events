@@ -11,4 +11,5 @@ router.put('/:id', EventsController.editEvent);
 router.delete('/:id', AuthToken, EventsController.deleteEvents);
 
 
+
 module.exports = router;
