@@ -4,17 +4,17 @@ const bcrypt = require('bcryptjs');
 
 
 async function getAllUsers() {
-    return prisma.users.findMany({})
+    return prisma.user.findMany({})
 }
 
 async function getUserById(userId) {
-    return prisma.users.findFirst({
+    return prisma.user.findFirst({
         where: { id: Number(userId) }
     })
 }
 
 async function createUser(data) {
-    return prisma.users.create({
+    return prisma.user.create({
         data: {
             ...data
         }
@@ -23,7 +23,7 @@ async function createUser(data) {
 
 
 async function editUser(userId, data) {
-    return prisma.users.update({
+    return prisma.user.update({
         data: {
             ...data
         },

@@ -3,33 +3,37 @@ const prisma = new PrismaClient();
 
 
 async function listAllEvents() {
-    return prisma.events.findMany({})
+    return prisma.event.findMany({})
 }
 
 async function getEvent(eventId) {
-    return prisma.events.findUnique({
-        where: { id: Number(eventId) }
+    return prisma.event.findUnique({
+        where: { id: Number(eventId) },
     });
 }
 
-async function createEvent(datas) {
-    return prisma.events.create({
+async function createEvent(datas, userId) {
+    return prisma.event.create({
         data: {
-            ...datas
+            ...datas,
+            creatorId: userId
         }
     });
 }
 
 async function editEvent(eventId, datas) {
-    return prisma.events.update({
+    return prisma.event.update({
         where: { id: Number(eventId) },
         data: { ...datas }
     });
 }
 
-async function deleteEvents(eventId) {
-    return prisma.events.delete({
-        where: { id: Number(eventId) }
+async function deleteEvents(eventId, userId) {
+    return prisma.event.deleteMany({
+        where: {
+            id: Number(eventId),
+            creatorId: userId
+        }
     });
 }
 

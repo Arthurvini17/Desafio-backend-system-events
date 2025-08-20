@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -14,23 +8,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Events {
-  id        Int         @id @default(autoincrement())
-  nome      String
-  descricao String
-  data      DateTime
-  local     String
-  vagas     Int
-  inscritos UserEvent[]
+model Event {
+  id          Int      @id @default(autoincrement())
+  nome        String
+  descricao   String
+  data        DateTime
+  local       String
+  limiteVagas Int
+
+  // Relação com o usuário que criou o evento
+  creatorId Int?
+  creator   User? @relation("CreatedEvents", fields: [creatorId], references: [id])
+
+  // Relação N:N com usuários inscritos
+  inscricoes UserEvent[]
+
+  createdAt DateTime @default(now())
 }
 
-model Users {
-  id         Int         @id @default(autoincrement())
-  nome       String
-  email      String      @unique
-  password   String
-  telefone   String
+model User {
+  id       Int    @id @default(autoincrement())
+  nome     String
+  email    String @unique
+  password String
+  telefone String
+
+  // Relação N:N com eventos
   inscricoes UserEvent[]
+
+  // Eventos criados pelo usuário
+  createdEvents Event[] @relation("CreatedEvents")
+
+  createdAt DateTime @default(now())
 }
 
 model UserEvent {
@@ -38,9 +47,8 @@ model UserEvent {
   userId    Int
   eventId   Int
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
 
-  user  Users  @relation(fields: [userId], references: [id])
-  event Events @relation(fields: [eventId], references: [id])
-
-  @@unique([userId, eventId]) // evita inscrição duplicada
+  @@unique([userId, eventId])
 }

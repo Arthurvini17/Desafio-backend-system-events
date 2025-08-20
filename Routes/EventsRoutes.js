@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const EventsController = require('../Controllers/EventsController');
+const AuthToken = require('../middlewares/AuthToken')
 
 
 router.get('/', EventsController.listAllEvents);
 router.get('/:id', EventsController.getEvent);
-router.post('/', EventsController.createEvent);
+router.post('/', AuthToken, EventsController.createEvent);
 router.put('/:id', EventsController.editEvent);
-router.delete('/:id', EventsController.deleteEvents);
+router.delete('/:id', AuthToken, EventsController.deleteEvents);
 
 
 module.exports = router;
