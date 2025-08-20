@@ -15,21 +15,32 @@ datasource db {
 }
 
 model Events {
-  id        Int      @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   nome      String
   descricao String
   data      DateTime
   local     String
-  users     Users[]  @relation("UserEvents")
+  vagas     Int
+  inscritos UserEvent[]
 }
 
 model Users {
-  id       Int      @id @default(autoincrement())
-  nome     String
-  email    String   @unique
-  password String
-  telefone String
-  events   Events[] @relation("UserEvents")
+  id         Int         @id @default(autoincrement())
+  nome       String
+  email      String      @unique
+  password   String
+  telefone   String
+  inscricoes UserEvent[]
 }
 
-//TODO ADICIONAR LIMITES DE VAGAS NO MODEL EVENTS
+model UserEvent {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  eventId   Int
+  createdAt DateTime @default(now())
+
+  user  Users  @relation(fields: [userId], references: [id])
+  event Events @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId]) // evita inscrição duplicada
+}
