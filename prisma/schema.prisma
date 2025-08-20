@@ -27,6 +27,7 @@ model Users {
   id       Int      @id @default(autoincrement())
   nome     String
   email    String   @unique
+  password String
   telefone String
   events   Events[] @relation("UserEvents")
 }
