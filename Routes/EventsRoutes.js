@@ -10,6 +10,7 @@ router.post('/', AuthToken, EventsController.createEvent);
 router.put('/:id', EventsController.editEvent);
 router.delete('/:id', AuthToken, EventsController.deleteEvents);
 
+router.post('/:id/inscricao', AuthToken, EventsController.subscribe);
 
 
 module.exports = router;

@@ -1,3 +1,4 @@
+const { subscribe } = require('../Routes/EventsRoutes');
 const EventsServices = require('../Services/EventsServices');
 
 
@@ -23,8 +24,11 @@ module.exports = {
     },
 
     listAllEvents: async (req, res) => {
+
+        const skip = req.query.skip ? Number(req.query.skip) : undefined;
+        const take = req.query.take ? Number(req.query.take) : undefined
         try {
-            const events = await EventsServices.listAllEvents();
+            const events = await EventsServices.listAllEvents(skip, take);
 
             if (events.length === 0) {
                 return res.status(400).json({ message: 'Não existem eventos' });
@@ -107,6 +111,23 @@ module.exports = {
             return res.status(500).json({ message: 'Erro no server', error })
         }
     },
+
+    subscribe: async (req, res) => {
+        const eventId = Number(req.params.id);
+        const userId = req.user.id
+
+        if (!eventId || isNaN(eventId)) {
+            return res.status(400).json({ message: 'ID invalido' })
+        }
+
+        try {
+            const subscribeparticipant = await EventsServices.subscribe(userId, eventId);
+            return res.status(201).json({ message: 'inscrição realizada' });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: 'erro no server' });
+        }
+    }
 
 
 }
