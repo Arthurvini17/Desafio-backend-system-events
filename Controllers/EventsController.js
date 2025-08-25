@@ -1,4 +1,3 @@
-const { subscribe } = require('../Routes/EventsRoutes');
 const EventsServices = require('../Services/EventsServices');
 
 
