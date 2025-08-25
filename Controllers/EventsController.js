@@ -5,20 +5,22 @@ const EventsServices = require('../Services/EventsServices');
 module.exports = {
     getEvent: async (req, res) => {
         const { id } = req.params;
+        const eventId = Number(id);
 
-        if (!id || isNaN(id)) {
-            return res.status(400).json({ message: 'ID inválido' });
+        if (!eventId) {
+            return res.status(400).json({ message: 'id inválido' });
         }
 
         try {
-            const event = await EventsServices.getEvent(id);
+            const result = await EventsServices.getEvent(eventId);
 
-            if (event.length === 0) {
+            if (!result) {
                 return res.status(404).json({ message: 'Evento não encontrado ou não existe' });
             }
 
-            return res.status(200).json({ data: event });
+            return res.status(200).json({ data: result });
         } catch (error) {
+            console.error(error);
             return res.status(500).json({ message: 'Erro no servidor', error });
         }
     },
@@ -70,14 +72,21 @@ module.exports = {
     deleteEvents: async (req, res) => {
         const { id } = req.params;
 
-        if (!id || isNaN(id)) {
-            return res.status(400).json({ message: 'ID invalido' });
+        const eventId = Number(id);
+
+
+        if (!eventId) {
+            return res.status(400).json({ message: 'id invalido' });
         }
 
         try {
-            const deleteEvent = await EventsServices.deleteEvents(id,
+            const deleteEvent = await EventsServices.deleteEvents(eventId,
                 req.user.id
             );
+
+            if (deleteEvent.count === 0) {
+                return res.status(404).json({ message: 'evento não encontrado' });
+            }
             return res.status(200).json({ delete: deleteEvent });
         } catch (error) {
             console.log(error)

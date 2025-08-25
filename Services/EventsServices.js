@@ -57,12 +57,14 @@ async function subscribe(userId, eventId) {
 
 
 
+
+
 module.exports = {
     getEvent,
     listAllEvents,
     createEvent,
     editEvent,
     deleteEvents,
-    subscribe
+    subscribe,
 
 };
