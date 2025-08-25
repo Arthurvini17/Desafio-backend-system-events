@@ -2,36 +2,60 @@ const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 
 
-async function listAllEvents() {
-    return prisma.events.findMany({})
+async function listAllEvents(skip, take) {
+    return prisma.event.findMany({
+        skip,
+        take,
+        orderBy: { createdAt: 'asc' },
+    })
 }
 
 async function getEvent(eventId) {
-    return prisma.events.findUnique({
-        where: { id: Number(eventId) }
+    return prisma.event.findUnique({
+
+        where: { id: Number(eventId) },
     });
 }
 
-async function createEvent(datas) {
-    return prisma.events.create({
+async function createEvent(datas, userId) {
+    return prisma.event.create({
         data: {
-            ...datas
+            ...datas,
+            creatorId: userId
         }
     });
 }
 
 async function editEvent(eventId, datas) {
-    return prisma.events.update({
+    return prisma.event.update({
         where: { id: Number(eventId) },
         data: { ...datas }
     });
 }
 
-async function deleteEvents(eventId) {
-    return prisma.events.delete({
-        where: { id: Number(eventId) }
+async function deleteEvents(eventId, userId) {
+    return prisma.event.deleteMany({
+        where: {
+            id: Number(eventId),
+            creatorId: userId
+        }
     });
 }
+
+
+// checa se o evento existe 
+//checa o limite de vagas
+//cria a inscrição 
+async function subscribe(userId, eventId) {
+    return prisma.userEvent.create({
+        data: {
+            userId,
+            eventId
+        }
+    });
+}
+
+
 
 
 
@@ -41,5 +65,6 @@ module.exports = {
     createEvent,
     editEvent,
     deleteEvents,
+    subscribe,
 
 };

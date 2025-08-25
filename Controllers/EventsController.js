@@ -4,27 +4,32 @@ const EventsServices = require('../Services/EventsServices');
 module.exports = {
     getEvent: async (req, res) => {
         const { id } = req.params;
+        const eventId = Number(id);
 
-        if (!id || isNaN(id)) {
-            return res.status(400).json({ message: 'ID inválido' });
+        if (!eventId) {
+            return res.status(400).json({ message: 'id inválido' });
         }
 
         try {
-            const event = await EventsServices.getEvent(id);
+            const result = await EventsServices.getEvent(eventId);
 
-            if (event.length === 0) {
+            if (!result) {
                 return res.status(404).json({ message: 'Evento não encontrado ou não existe' });
             }
 
-            return res.status(200).json({ data: event });
+            return res.status(200).json({ data: result });
         } catch (error) {
+            console.error(error);
             return res.status(500).json({ message: 'Erro no servidor', error });
         }
     },
 
     listAllEvents: async (req, res) => {
+
+        const skip = req.query.skip ? Number(req.query.skip) : undefined;
+        const take = req.query.take ? Number(req.query.take) : undefined
         try {
-            const events = await EventsServices.listAllEvents();
+            const events = await EventsServices.listAllEvents(skip, take);
 
             if (events.length === 0) {
                 return res.status(400).json({ message: 'Não existem eventos' });
@@ -37,7 +42,8 @@ module.exports = {
     },
 
     createEvent: async (req, res) => {
-        const { nome, descricao, data, local } = req.body;
+        const { nome, descricao, data, local, limiteVagas } = req.body;
+
 
         //convertendo os dados
 
@@ -45,16 +51,45 @@ module.exports = {
             nome,
             descricao,
             data: new Date(data),
-            local
+            local,
+            limiteVagas,
         };
 
 
         try {
-            const createEvents = await EventsServices.createEvent(datas);
+            const createEvents = await EventsServices.createEvent(datas,
+                req.user.id
+            );
             return res.status(201).json({ message: 'evento criado', createEvents });
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'erro no server', error })
+        }
+    },
+
+
+    deleteEvents: async (req, res) => {
+        const { id } = req.params;
+
+        const eventId = Number(id);
+
+
+        if (!eventId) {
+            return res.status(400).json({ message: 'id invalido' });
+        }
+
+        try {
+            const deleteEvent = await EventsServices.deleteEvents(eventId,
+                req.user.id
+            );
+
+            if (deleteEvent.count === 0) {
+                return res.status(404).json({ message: 'evento não encontrado' });
+            }
+            return res.status(200).json({ delete: deleteEvent });
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'erro no servidor' });
         }
     },
 
@@ -85,19 +120,23 @@ module.exports = {
         }
     },
 
-    deleteEvents: async (req, res) => {
-        const { id } = req.params;
+    subscribe: async (req, res) => {
+        const eventId = Number(req.params.id);
+        const userId = req.user.id
 
-        if (!id || isNaN(id)) {
-            return res.status(400).json({ message: 'ID invalido' });
+        if (!eventId || isNaN(eventId)) {
+            return res.status(400).json({ message: 'ID invalido' })
         }
 
         try {
-            const deleteEvent = await EventsServices.deleteEvents(id);
-            return res.status(200).json({ delete: deleteEvent });
+            const subscribeparticipant = await EventsServices.subscribe(userId, eventId);
+            return res.status(201).json({ message: 'inscrição realizada' });
         } catch (error) {
-            return res.status(500).json({ message: 'erro no servidor' });
+            console.log(error);
+            return res.status(500).json({ message: 'erro no server' });
         }
     }
+
+
 }
 

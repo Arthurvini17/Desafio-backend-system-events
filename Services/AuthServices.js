@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 async function auth(email, password) {
 
     //faz a busca pelo email passado pelo body
-    const user = await prisma.users.findFirst({
+    const user = await prisma.user.findFirst({
         where: { email }
     });
     if (!user) return null
