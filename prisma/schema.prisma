@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Event {
+model Events {
   id          Int      @id @default(autoincrement())
   nome        String
   descricao   String
@@ -36,7 +36,7 @@ model User {
   inscricoes UserEvent[]
 
   // Eventos criados pelo usuário
-  createdEvents Event[] @relation("CreatedEvents")
+  createdEvents Events[] @relation("CreatedEvents")
 
   createdAt DateTime @default(now())
 }
@@ -47,7 +47,7 @@ model UserEvent {
   eventId   Int
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
-  event     Event    @relation(fields: [eventId], references: [id])
+  event     Events   @relation(fields: [eventId], references: [id])
 
   @@unique([userId, eventId])
 }
