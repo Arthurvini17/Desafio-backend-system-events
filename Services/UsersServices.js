@@ -13,6 +13,12 @@ async function getUserById(userId) {
     })
 }
 
+async function verifyUser(data) {
+    return prisma.user.findUnique({
+        where: { email: data.email }
+    })
+}
+
 async function createUser(data) {
     return prisma.user.create({
         data: {
@@ -37,5 +43,6 @@ module.exports = {
     getAllUsers,
     getUserById,
     createUser,
-    editUser
+    editUser,
+    verifyUser
 }

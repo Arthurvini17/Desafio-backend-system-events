@@ -19,7 +19,6 @@ module.exports = {
 
             res.json({ token });
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ message: 'erro no server' });
         }
     },

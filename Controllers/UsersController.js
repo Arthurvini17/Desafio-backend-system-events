@@ -14,7 +14,6 @@ module.exports = {
             }
             return res.status(200).json({ data: users })
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ message: 'erro no server' });
         }
     },
@@ -32,27 +31,30 @@ module.exports = {
             }
             return res.status(200).json({ data: userById });
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ message: 'erro no server' })
         }
     },
 
     createUser: async (req, res) => {
-
         const { nome, email, password, telefone } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
         try {
+            const userExists = await usersServices.verifyUser({ email });
+            if (userExists) {
+                return res.status(400).json({ message: 'Email já cadastrado' });
+            }
+
             const creatingUser = await usersServices.createUser({
                 nome, email, telefone, password: hashedPassword
-            })
-            return res.status(201).json({ message: 'user criado', creatingUser })
+            });
+
+            return res.status(201).json({ message: 'Usuário criado', creatingUser });
+
         } catch (error) {
-            console.log(error)
-            return res.status(500).json({ message: 'erro no server' });
+            return res.status(500).json({ message: 'Erro no servidor' });
         }
     },
-
 
     editUser: async (req, res) => {
         const { id } = req.params;
@@ -80,7 +82,6 @@ module.exports = {
 
             return res.status(200).json({ message: 'user editado', editingUser });
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ message: 'error no server' });
         }
     }
