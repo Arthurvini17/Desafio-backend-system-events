@@ -14,7 +14,6 @@ module.exports = {
             }
             return res.status(200).json({ data: users })
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ message: 'erro no server' });
         }
     },
@@ -32,7 +31,6 @@ module.exports = {
             }
             return res.status(200).json({ data: userById });
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ message: 'erro no server' })
         }
     },
@@ -54,7 +52,6 @@ module.exports = {
             return res.status(201).json({ message: 'Usuário criado', creatingUser });
 
         } catch (error) {
-            console.error(error);
             return res.status(500).json({ message: 'Erro no servidor' });
         }
     },
@@ -85,7 +82,6 @@ module.exports = {
 
             return res.status(200).json({ message: 'user editado', editingUser });
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ message: 'error no server' });
         }
     }

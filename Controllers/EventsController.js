@@ -19,7 +19,6 @@ module.exports = {
 
             return res.status(200).json({ data: result });
         } catch (error) {
-            console.error(error);
             return res.status(500).json({ message: 'Erro no servidor', error });
         }
     },
@@ -62,7 +61,6 @@ module.exports = {
             );
             return res.status(201).json({ message: 'evento criado', createEvents });
         } catch (error) {
-            console.log(error)
             return res.status(500).json({ message: 'erro no server', error })
         }
     },
@@ -88,7 +86,6 @@ module.exports = {
             }
             return res.status(200).json({ delete: deleteEvent });
         } catch (error) {
-            console.log(error)
             return res.status(500).json({ message: 'erro no servidor' });
         }
     },
@@ -132,7 +129,6 @@ module.exports = {
             const subscribeparticipant = await EventsServices.subscribe(userId, eventId);
             return res.status(201).json({ message: 'inscrição realizada' });
         } catch (error) {
-            console.log(error);
             return res.status(500).json({ message: 'erro no server' });
         }
     }
