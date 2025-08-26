@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const UsersControllers = require('../Controllers/UsersController');
-
+const validateSchema = require('../middlewares/validateSchema');
+const createUserSchema = require('../schemas/usersSchema');
 
 
 /**
@@ -99,7 +100,7 @@ router.get('/:id', UsersControllers.getUserById);
  *       400:
  *         description: Erro de validação
  */
-router.post('/', UsersControllers.createUser);
+router.post('/', validateSchema(createUserSchema), UsersControllers.createUser);
 
 /**
  * @swagger
