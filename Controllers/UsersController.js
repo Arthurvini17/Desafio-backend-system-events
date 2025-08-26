@@ -58,15 +58,26 @@ module.exports = {
         const { id } = req.params;
 
         const { nome, email, telefone, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
 
         if (!id || isNaN(id)) {
             return res.status(200).json({ message: 'ID invalido' });
         }
 
         try {
-            const editingUser = await usersServices.editUser(id,
-                { nome, email, telefone, password: hashedPassword })
+
+
+            let hashedPassword;
+            if (password) {
+                hashedPassword = await bcrypt.hash(password, 10);
+            }
+
+            const editingUser = await usersServices.editUser(id, {
+                nome,
+                email,
+                telefone,
+                ...(hashedPassword && { password: hashedPassword })
+            });
+
             return res.status(200).json({ message: 'user editado', editingUser });
         } catch (error) {
             console.log(error);
