@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "systemevents"."Event" (
+CREATE TABLE "public"."Event" (
     "id" SERIAL NOT NULL,
     "nome" TEXT NOT NULL,
     "descricao" TEXT NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE "systemevents"."Event" (
 );
 
 -- CreateTable
-CREATE TABLE "systemevents"."User" (
+CREATE TABLE "public"."User" (
     "id" SERIAL NOT NULL,
     "nome" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE "systemevents"."User" (
 );
 
 -- CreateTable
-CREATE TABLE "systemevents"."UserEvent" (
+CREATE TABLE "public"."UserEvent" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "eventId" INTEGER NOT NULL,
@@ -35,16 +35,16 @@ CREATE TABLE "systemevents"."UserEvent" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "systemevents"."User"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UserEvent_userId_eventId_key" ON "systemevents"."UserEvent"("userId", "eventId");
+CREATE UNIQUE INDEX "UserEvent_userId_eventId_key" ON "public"."UserEvent"("userId", "eventId");
 
 -- AddForeignKey
-ALTER TABLE "systemevents"."Event" ADD CONSTRAINT "Event_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "systemevents"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."Event" ADD CONSTRAINT "Event_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "systemevents"."UserEvent" ADD CONSTRAINT "UserEvent_userId_fkey" FOREIGN KEY ("userId") REFERENCES "systemevents"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."UserEvent" ADD CONSTRAINT "UserEvent_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "systemevents"."UserEvent" ADD CONSTRAINT "UserEvent_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "systemevents"."Event"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."UserEvent" ADD CONSTRAINT "UserEvent_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "public"."Event"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
